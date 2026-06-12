@@ -9,6 +9,15 @@
   "buildEntryPoint": "index.html",
   "localAppUrl": "http://localhost:5173",
   "logoPath": "./app-logo.png",
-  "connectionReferences": {},
+  "connectionReferences": {
+    "6b87e81a-c99e-43da-b656-b2ad053a92e3": {
+      "id": "/providers/Microsoft.PowerApps/apis/shared_microsoftcopilotstudio",
+      "displayName": "Microsoft Copilot Studio",
+      "dataSources": [
+        "microsoftcopilotstudio"
+      ],
+      "dataSets": {}
+    }
+  },
   "databaseReferences": {}
 }

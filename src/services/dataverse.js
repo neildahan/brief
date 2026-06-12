@@ -534,27 +534,43 @@ const mock = {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 3. LIVE — same shape as mock. Wraps `pac code add-data-source`-generated typed
-//    services (Dataverse) + the cloud-flow connector that reaches Copilot Studio.
-//    Filled in only when wiring to a sandbox/prod org. Keep the shape identical.
+// 3. LIVE — transitional hybrid. The AI is wired to the real Copilot Studio
+//    agent IN-TENANT (via the generated connector client in src/services/
+//    copilot.js). The roster + chat history still use the in-memory store,
+//    because the custom Dataverse tables (departments/agents/conversations/
+//    messages/documents) don't exist yet — those get swapped to real Dataverse
+//    CRUD once the tables are created (see ARCHITECTURE.md §6).
 // ─────────────────────────────────────────────────────────────────────────────
-const notWired = (m) => async () => {
-  throw new Error(
-    `dataverseService.${m}() is not wired to live data yet. ` +
-      `Implement the live object in src/services/dataverse.js (see ARCHITECTURE.md §6), ` +
-      `then run against a SANDBOX org with VITE_USE_MOCK=false.`,
-  )
+async function liveInvokeAgent({ conversationId, agentId = null, prompt, lang = 'en', attachments = [] }) {
+  const { invokeCopilot } = await import('./copilot.js')
+  const userMsg = {
+    id: uid('msg'),
+    conversationId,
+    role: 'user',
+    agentId,
+    text: prompt,
+    attachments,
+    createdOn: new Date().toISOString(),
+  }
+  messages = [...messages, userMsg]
+
+  const text = await invokeCopilot({ conversationId, prompt })
+
+  const agentMsg = {
+    id: uid('msg'),
+    conversationId,
+    role: 'agent',
+    agentId,
+    text,
+    createdOn: new Date().toISOString(),
+  }
+  messages = [...messages, agentMsg]
+  return { userMessage: userMsg, agentMessage: agentMsg }
 }
 
 const live = {
-  listDepartments: notWired('listDepartments'),
-  listAgents: notWired('listAgents'),
-  getAgent: notWired('getAgent'),
-  listConversations: notWired('listConversations'),
-  listMessages: notWired('listMessages'),
-  createConversation: notWired('createConversation'),
-  attachDocument: notWired('attachDocument'),
-  invokeAgent: notWired('invokeAgent'),
+  ...mock, // roster + history from the in-memory store (no Dataverse tables yet)
+  invokeAgent: liveInvokeAgent, // the real Copilot Studio agent, in-tenant
 }
 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK !== 'false'
