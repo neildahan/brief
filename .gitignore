@@ -1,0 +1,28 @@
+node_modules/
+dist/
+dist-ssr/
+
+# local env — never commit secrets / connection strings
+.env
+.env.local
+.env.*.local
+
+# editor / OS
+.DS_Store
+.vscode/
+.idea/
+*.log
+
+# local tooling config + throwaway design scratch
+.claude/settings.local.json
+/brand-previews/
+
+# ── RED LINE: never commit real client data ─────────────────────────────────
+# Block real customer files even by accident.
+/client-data/
+/data/
+*.client.*
+*.matter.*
+*.xlsx
+*.docx
+*.pdf
