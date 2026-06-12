@@ -1,11 +1,15 @@
-// BriefAI brand assets (from /public). The mark + full logos are real SVGs;
-// these thin wrappers render them at the right size for each surface.
+// BriefAI brand assets. Imported through Vite so they bundle into /assets with
+// hashed names — this makes them resolve correctly inside the Power Apps host
+// (absolute /public paths would point at the host root and 404).
+import markUrl from '../assets/brief-mark.svg'
+import logoWhiteUrl from '../assets/brief-logo-white.svg'
+import logoDarkUrl from '../assets/brief-logo.svg'
 
 // The icon mark alone — used for the front-desk avatar, hero, and thinking dots.
 export function BriefMark({ size = 36, className = '' }) {
   return (
     <img
-      src="/brief-mark.svg"
+      src={markUrl}
       alt="BriefAI"
       width={size}
       height={size}
@@ -18,6 +22,5 @@ export function BriefMark({ size = 36, className = '' }) {
 // The full logo (mark + wordmark). variant 'white' for dark backgrounds
 // (the navy sidebar), 'dark' for light backgrounds.
 export function BriefLogo({ variant = 'dark', className = '' }) {
-  const src = variant === 'white' ? '/brief-logo-white.svg' : '/brief-logo.svg'
-  return <img src={src} alt="BriefAI" className={className} />
+  return <img src={variant === 'white' ? logoWhiteUrl : logoDarkUrl} alt="BriefAI" className={className} />
 }
