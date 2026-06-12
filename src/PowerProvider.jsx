@@ -1,12 +1,15 @@
-// PLACEHOLDER PowerProvider.
-//
-// `pac code init` generates the real PowerProvider that initializes the Power
-// Apps SDK (auth + connectors) for the deployed app. Until then, this passthrough
-// lets the app run on mock data with `npm run dev`. When you run `pac code init`,
-// replace this file's body with the generated provider — the rest of the app
-// already wraps its root in <PowerProvider> (see src/App.jsx), so nothing else
-// needs to change.
+import { useEffect } from 'react'
+import { getContext } from '@microsoft/power-apps/app'
 
+// Establishes the handshake with the Power Apps host so the deployed app picks
+// up app/user/host context and the connector bridge. Children render
+// immediately; when running outside the host (plain `npm run dev`) the
+// handshake simply no-ops.
 export default function PowerProvider({ children }) {
+  useEffect(() => {
+    getContext().catch(() => {
+      // Not running inside the Power Apps host — fine in local mock dev.
+    })
+  }, [])
   return children
 }

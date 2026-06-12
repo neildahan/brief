@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/open-sans": "^5.2.7",
     "@microsoft/power-apps": "^1.1.9",
     "@phosphor-icons/react": "^2.1.10",
     "lucide-react": "^0.460.0",
